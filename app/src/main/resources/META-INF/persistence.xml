@@ -2,8 +2,9 @@
     <persistence-unit name="test-unit">
         <class>HibernateDemo.Person</class>
         <properties>
-        <property name="hibernate.connection.url" value="jdbc:postgresql://localhost/demoDB"/>
+        <property name="hibernate.connection.url" value="jdbc:postgresql:demodb"/>
         <property name="hibernate.connection.user" value="postgres" />
+        <property name="hibernate.hbm2ddl.auto" value="update"/>
        </properties>
        
     </persistence-unit>
