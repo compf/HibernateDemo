@@ -4,11 +4,18 @@
 
 plugins {
     id 'HibernateDemo.java-application-conventions'
+    //id "org.hibernate:hibernate-core"  
 }
 
 dependencies {
     implementation 'org.apache.commons:commons-text'
     implementation project(':utilities')
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+    implementation "org.hibernate:hibernate-core:6.0.1.Final"
+
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
+implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.2'
+
 }
 
 application {

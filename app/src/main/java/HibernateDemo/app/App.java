@@ -3,12 +3,14 @@
  */
 package HibernateDemo.app;
 
+import HibernateDemo.Person;
 import HibernateDemo.list.LinkedList;
+import jakarta.persistence.Persistence;
 
 import static HibernateDemo.utilities.StringUtils.join;
 import static HibernateDemo.utilities.StringUtils.split;
 import static HibernateDemo.app.MessageUtils.getMessage;
-
+import org.hibernate.*;
 import org.apache.commons.text.WordUtils;
 
 public class App {
@@ -17,5 +19,14 @@ public class App {
         tokens = split(getMessage());
         String result = join(tokens);
         System.out.println(WordUtils.capitalize(result));
+
+        var emf=Persistence.createEntityManagerFactory("test-unit");
+        var em=emf.createEntityManager();
+        em.getTransaction().begin();
+        Person p=new Person();
+        p.setName("Timo");
+        em.persist(p);
+        em.getTransaction().commit();
+        
     }
 }
