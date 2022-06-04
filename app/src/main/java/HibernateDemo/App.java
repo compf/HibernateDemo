@@ -3,6 +3,9 @@
  */
 package HibernateDemo;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
@@ -10,5 +13,7 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
+        EntityManagerFactory emf=Persistence.createEntityManagerFactory("test-unit");
+
     }
 }
