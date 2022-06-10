@@ -34,7 +34,20 @@ public class Person {
         return this.firstName;
     }
 
-    
+    @Override
+    public boolean equals(Object obj){
+        if(obj==null)return false;
+        if(obj==this)return true;
+        if(obj instanceof Person){
+            Person p=(Person)obj;
+            return p.id==this.id;
+        }
+        return false;
+    }
+    @Override
+    public int hashCode(){
+        return id;
+    }
 
     public String getLastName() {
         return this.lastName;

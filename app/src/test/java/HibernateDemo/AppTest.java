@@ -17,56 +17,77 @@ import java.util.GregorianCalendar;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 
 class AppTest {
-    @Test void appHasAGreeting() {
+    @Test
+    void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
     }
-    @Test void hibernateWorking(){
-        Address address1=new Address("Fürstenweg", "49824", "9");
-        Address address2=new Address("Jahnplatz", "49080", "6");
-        Person p1=new Person("Gerda","Jeurink",address1,Calendar.getInstance());
-        Person s1=new Student(978621, "Timo", "Schoemaker", address2, new GregorianCalendar(1997,12,3));
-        EntityManagerFactory emf=Persistence.createEntityManagerFactory("test-test-unit");
-        EntityManager em=emf.createEntityManager();
-        try{
-          
-            var mt=em.getTransaction();
+
+    @Test
+    void hibernateWorking() {
+        Address address1 = new Address("Fürstenweg", "49824", "9");
+        Address address2 = new Address("Jahnplatz", "49080", "6");
+        Person p1 = new Person("Gerda", "Jeurink", address1, Calendar.getInstance());
+        Person s1 = new Student(978621, "Timo", "Schoemaker", address2, new GregorianCalendar(1997, 12, 3));
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-test-unit");
+        EntityManager em = emf.createEntityManager();
+        try {
+
+            var mt = em.getTransaction();
             mt.begin();
             em.persist(p1);
             em.persist(s1);
             em.flush();
             mt.commit();
-            
-        
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             System.out.print(ex);
+        } finally {
+            em.close();
         }
-        finally{
-        em.close();
-        }
-        System.out.println("Up to there");
-        try{
-          
-         
-        em=emf.createEntityManager();
-        var query=em.createNativeQuery("SELECT COUNT(dtype) FROM person");
-        long count=(long)query.getSingleResult();
-       assertEquals(2, count);
-        }
-        catch(Exception ex){
+        testHibernateCount(emf);
+        testHibernateSelect(emf, 1, Person.class);
+        testHibernateSelect(emf, 2, Student.class);
+
+
+    }
+
+    private void testHibernateCount(EntityManagerFactory emf) {
+        EntityManager em=null;
+        try {
+
+            em = emf.createEntityManager();
+            var query = em.createNativeQuery("SELECT COUNT(dtype) FROM person");
+            long count = (long) query.getSingleResult();
+            assertEquals(2, count);
+        } catch (Exception ex) {
             System.out.print(ex);
             assertTrue(false);
 
+        } finally {
+            em.close();
         }
-        finally{
-        em.close();
+    }
+    
+    private void testHibernateSelect(EntityManagerFactory emf,int qId,Class<?> personType) {
+        EntityManager em=null;
+        try {
+
+            em = emf.createEntityManager();
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p where p.id=:qId ",Person.class).
+            setParameter("qId", qId);
+            Person p = query.getSingleResult();
+            assertEquals(p.getClass(),personType);
+        } catch (Exception ex) {
+            System.out.print(ex);
+            assertTrue(false);
+
+        } finally {
+            em.close();
         }
-       
-        
-       
     }
 
 }
