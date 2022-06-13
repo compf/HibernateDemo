@@ -1,0 +1,5 @@
+  dtype  | id | housenr | postcode |   street   |        birthdate        | firstname |  lastname  | matrnumber 
+---------+----+---------+----------+------------+-------------------------+-----------+------------+------------
+ Person  |  1 | 9       | 49824    | Fürstenweg | 2022-06-04 19:52:16.835 | Gerda     | Jeurink    |           
+ Student |  2 | 6       | 49080    | Jahnplatz  | 1998-01-03 00:00:00     | Timo      | Schoemaker |     978621
+(2 rows)
