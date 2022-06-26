@@ -60,7 +60,7 @@ class AppTest {
         try {
 
             em = emf.createEntityManager();
-            var query = em.createNativeQuery("SELECT COUNT(dtype) FROM person");
+            var query = em.createNativeQuery("SELECT COUNT(firstName) FROM person");
             long count = (long) query.getSingleResult();
             assertEquals(2, count);
         } catch (Exception ex) {
