@@ -28,7 +28,7 @@ class AppTest {
 
     @Test
     void hibernateWorking() {
-        Address address1 = new Address("Fürstenweg", "49824", "9");
+        Address address1 = new Address("Hauptweg", "49824", "9");
         Address address2 = new Address("Jahnplatz", "49080", "6");
         Person p1 = new Person("Gerda", "Jeurink", address1, Calendar.getInstance());
         Person s1 = new Student(978621, "Timo", "Schoemaker", address2, new GregorianCalendar(1997, 12, 3));
