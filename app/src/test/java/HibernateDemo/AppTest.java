@@ -11,6 +11,7 @@ import HibernateDemo.model.Student;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -20,18 +21,13 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 
 class AppTest {
-    @Test
-    void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
-    }
-
+   
     @Test
     void hibernateWorking() {
         Address address1 = new Address("Hauptweg", "49824", "9");
         Address address2 = new Address("Jahnplatz", "49080", "6");
-        Person p1 = new Person("Gerda", "Jeurink", address1, Calendar.getInstance());
-        Person s1 = new Student(978621, "Timo", "Schoemaker", address2, new GregorianCalendar(1997, 12, 3));
+        Person p1 = new Person("Gerda", "Jeurink", address1,LocalDate.now());
+        Person s1 = new Student(978621, "Timo", "Schoemaker", address2,  LocalDate.of(1997, 12, 3));
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-test-unit");
         EntityManager em = emf.createEntityManager();
         try {

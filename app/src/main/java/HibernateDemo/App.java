@@ -3,17 +3,130 @@
  */
 package HibernateDemo;
 
+import java.time.LocalDate;
+
+import HibernateDemo.model.Address;
+import HibernateDemo.model.Person;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
+public class App extends Application {
+    private ListView<Person> lvPersons;
+    private VBox editorPane=new VBox();
+    private Person currPerson;
+    @Override
+    public void start(Stage stage){
+
+        initBasicStructure(stage);
+        stage.show();
     }
+    void initBasicStructure(Stage stage){
+        var grid=new GridPane();
+        lvPersons=new ListView<Person>();
+        lvPersons.selectionModelProperty().addListener(new ChangeListener<MultipleSelectionModel<Person>>() {
 
+            @Override
+            public void changed(ObservableValue<? extends MultipleSelectionModel<Person>> observable, MultipleSelectionModel<Person> oldValue, MultipleSelectionModel<Person> newValue) {
+                currPerson=newValue.getSelectedItems().get(0);
+                currPersonChanged();
+                
+            }
+            
+        });
+        
+        grid.add(editorPane, 1, 0);
+        loadData();
+        lvPersons.getSelectionModel().selectFirst();
+        grid.add(lvPersons, 0, 0);
+        var buttonPane=new HBox();
+        grid.add(buttonPane,0,1,2,1);
+
+        var newPersonButton=new Button();
+        newPersonButton.setText("New Person");
+        newPersonButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                personAdded();
+                
+            }
+
+           
+            
+        });
+        buttonPane.getChildren().add(newPersonButton);
+
+         var newStudentButton=new Button();
+         newStudentButton.setText("New Student");
+         newStudentButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                studentAdded();
+                
+            }
+
+           
+            
+        });
+        buttonPane.getChildren().add(newStudentButton);
+
+
+
+        var deleteCurrentButton=new Button();
+        deleteCurrentButton.setText("Delete");
+        deleteCurrentButton.setOnAction(new EventHandler<ActionEvent>() {
+
+           @Override
+           public void handle(ActionEvent event) {
+            deleteCurrent();
+               
+           }
+
+          
+           
+       });
+       buttonPane.getChildren().add(deleteCurrentButton);
+
+       var scene=new Scene(grid,800,600);
+       stage.setScene(scene);
+
+
+
+
+    }
+     private void personAdded() {
+    }
+     private void studentAdded() {
+    }
+    private void deleteCurrent(){
+
+    }
+    private void currPersonChanged(){
+
+    }
+    private void loadData(){
+        Person p=new Person("Hallo","Welt",new Address("Hauptweg","9","4789"),LocalDate.now());
+        lvPersons.getItems().add(p);
+    }
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-        EntityManagerFactory emf=Persistence.createEntityManagerFactory("test-unit");
+        launch(args);
+        //EntityManagerFactory emf=Persistence.createEntityManagerFactory("test-unit");
 
     }
 }
