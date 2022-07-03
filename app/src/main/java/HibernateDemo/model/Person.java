@@ -59,6 +59,10 @@ public class Person {
     public int hashCode() {
         return id;
     }
+    @Override
+    public String toString(){
+        return firstName+ " "+lastName;
+    }
 
     public String getLastName() {
         return this.lastName;

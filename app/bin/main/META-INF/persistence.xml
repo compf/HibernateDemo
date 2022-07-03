@@ -2,6 +2,7 @@
     <persistence-unit name="test-unit">
         <class>HibernateDemo.model.Person</class>
         <class>HibernateDemo.model.Address</class>
+        <class>HibernateDemo.model.Student</class>
 
         <properties>
         
@@ -9,7 +10,7 @@
         <property name="hibernate.connection.url" value="jdbc:postgresql:demodb"/>
         <property name="hibernate.connection.user" value="postgres" />
         <property name="hibernate.connection.password" value="test123" />
-        <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+        <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
         <property name="hibernate.format_sql" value="true"/>
         <property name="hibernate.use_sql_comments" value="true"/>
        </properties>
