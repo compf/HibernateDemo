@@ -7,10 +7,12 @@ import java.time.LocalDate;
 
 import HibernateDemo.model.Address;
 import HibernateDemo.model.Person;
+import HibernateDemo.model.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaDelete;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -41,9 +43,9 @@ public class App extends Application {
     private EntityManagerFactory emf;
     private EntityManager em;
     private EntityTransaction transaction;
-    private TextField firstNameField, lastNameField, streetField, postCodeField, housenrField;
+    private TextField firstNameField, lastNameField, streetField, postCodeField, housenrField,matrikelNrField;
     private DatePicker bDayPicker;
-
+    private VBox studentBox;
     @Override
     public void start(Stage stage) {
         emf = Persistence.createEntityManagerFactory("test-unit");
@@ -59,7 +61,6 @@ public class App extends Application {
 
             @Override
             public void handle(WindowEvent event) {
-                System.out.println("Closing");
                 transaction.commit();
                 em.close();
 
@@ -139,7 +140,6 @@ public class App extends Application {
         firstNameField = new TextField();
         firstNameField.textProperty().addListener((obs, oldText, newText) -> {
             currPerson.setFirstName(newText);
-            System.out.print("hallo");
         });
        
         editorPane.getChildren().add(lbl);
@@ -189,17 +189,48 @@ public class App extends Application {
         editorPane.getChildren().add(lbl);
         editorPane.getChildren().add(bDayPicker);
 
+        studentBox=new VBox();
+        lbl=new Label("Matrikelnr");
+        matrikelNrField=new TextField();
+        matrikelNrField.textProperty().addListener((obs, oldText, newText) -> {
+            Student s=(Student)currPerson;
+            int matrNr;
+            try{
+                matrNr=Integer.parseInt(newText);
+            }
+            catch(Exception ex){
+                matrNr=0;
+            }
+            s.setMatrNumber(matrNr);
+        });
+        studentBox.getChildren().add(lbl);
+        studentBox.getChildren().add(matrikelNrField);
+        studentBox.setVisible(false);
+        editorPane.getChildren().add(studentBox);
+
 
     }
 
     private void personAdded() {
+        Person p=new Person();
+        p.setFirstName("New");
+        p.setLastName("Person");
+        em.persist(p);
+        lvPersons.getItems().add(p);
     }
 
     private void studentAdded() {
+        Student p=new Student();
+        p.setFirstName("New");
+        p.setLastName("Student");
+        em.persist(p);
+        lvPersons.getItems().add(p);
     }
 
     private void deleteCurrent() {
-
+        em.remove(currPerson);
+        lvPersons.getItems().remove(currPerson);
+        currPerson=lvPersons.getItems().get(0);
     }
 
     private void currPersonChanged() {
@@ -209,6 +240,14 @@ public class App extends Application {
         housenrField.setText(currPerson.getAddress().getHouseNr());
         postCodeField.setText(currPerson.getAddress().getPostCode());
         bDayPicker.setValue(currPerson.getBirthDate());
+        if(currPerson instanceof Student ){
+            Student s=(Student)currPerson;
+            matrikelNrField.setText(s.getMatrNumber()+"");
+            studentBox.setVisible(true);
+        }
+        else{
+            studentBox.setVisible(false);
+        }
     }
 
     private void loadData() {

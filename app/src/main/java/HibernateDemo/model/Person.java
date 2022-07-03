@@ -21,6 +21,7 @@ public class Person {
     private LocalDate birthDate;
 
     public Person() {
+        this("New","Person",new Address("", "", ""),LocalDate.now());
     }
 
     public Person(String firstName, String lastName, Address address, LocalDate bDate) {
