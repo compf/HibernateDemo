@@ -16,6 +16,10 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+<<<<<<< HEAD
+=======
+ALTER TABLE ONLY public.student DROP CONSTRAINT fk3bkmp4kohbl54m14tb2fcqya3;
+>>>>>>> 8e1b7fb63699b9d390160470ea08e17476da74f8
 ALTER TABLE ONLY public.student DROP CONSTRAINT student_pkey;
 ALTER TABLE ONLY public.person DROP CONSTRAINT person_pkey;
 ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey;
@@ -92,6 +96,7 @@ ALTER TABLE public.person_seq OWNER TO postgres;
 --
 
 CREATE TABLE public.student (
+<<<<<<< HEAD
     id integer NOT NULL,
     housenr character varying(255),
     postcode character varying(255),
@@ -100,6 +105,10 @@ CREATE TABLE public.student (
     firstname character varying(255),
     lastname character varying(255),
     matrnumber integer NOT NULL
+=======
+    matrnumber integer NOT NULL,
+    id integer NOT NULL
+>>>>>>> 8e1b7fb63699b9d390160470ea08e17476da74f8
 );
 
 
@@ -121,6 +130,7 @@ COPY public.address (id, housenr, postcode, street) FROM stdin;
 
 COPY public.person (id, housenr, postcode, street, birthdate, firstname, lastname) FROM stdin;
 1	9	49824	Hauptweg	2022-07-10	Gerda	Musterfrau
+<<<<<<< HEAD
 \.
 
 
@@ -130,10 +140,25 @@ COPY public.person (id, housenr, postcode, street, birthdate, firstname, lastnam
 
 COPY public.student (id, housenr, postcode, street, birthdate, firstname, lastname, matrnumber) FROM stdin;
 2	6	49080	Jahnplatz	1997-12-03	Timo	Schoemaker	978621
+=======
+2	6	49080	Jahnplatz	1997-12-03	Timo	Schoemaker
+>>>>>>> 8e1b7fb63699b9d390160470ea08e17476da74f8
 \.
 
 
 --
+<<<<<<< HEAD
+=======
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.student (matrnumber, id) FROM stdin;
+978621	2
+\.
+
+
+--
+>>>>>>> 8e1b7fb63699b9d390160470ea08e17476da74f8
 -- Name: address_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
