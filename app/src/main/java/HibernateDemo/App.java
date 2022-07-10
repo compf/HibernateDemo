@@ -17,6 +17,7 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.NodeOrientation;
@@ -37,229 +38,245 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class App extends Application {
-    private ListView<Person> lvPersons;
-    private VBox editorPane = new VBox();
+   
+
+    public class GUIStuff{
+        private ListView<Person> lvPersons;
+        private VBox editorPane = new VBox();
+
+        private TextField firstNameField, lastNameField, streetField, postCodeField, housenrField,matrikelNrField;
+        private DatePicker bDayPicker;
+        private VBox studentBox;
+        
+        void initBasicStructure(Stage stage) {
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+    
+                @Override
+                public void handle(WindowEvent event) {
+                    exit();
+    
+                }
+    
+            });
+            var grid = new GridPane();
+            lvPersons = new ListView<Person>();
+            lvPersons.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Person>() {
+    
+                @Override
+                public void changed(ObservableValue<? extends Person> observable,
+                Person oldValue, Person newValue) {
+                    if(firstNameField==null)return;
+                    currPerson = newValue;
+                    currPersonChanged();
+                    firstNameField.setText(currPerson.getFirstName());
+                    lastNameField.setText(currPerson.getLastName());
+                    streetField.setText(currPerson.getAddress().getStreet());
+                    housenrField.setText(currPerson.getAddress().getHouseNr());
+                    postCodeField.setText(currPerson.getAddress().getPostCode());
+                    bDayPicker.setValue(currPerson.getBirthDate());
+                    if(currPerson instanceof Student ){
+                        Student s=(Student)currPerson;
+                        matrikelNrField.setText(s.getMatrNumber()+"");
+                        studentBox.setVisible(true);
+                    }
+                    else{
+                        studentBox.setVisible(false);
+                    }
+                   //throw new Error("test");
+                    
+    
+                }
+    
+            });
+    
+            grid.add(editorPane, 1, 0);
+            loadData();
+            lvPersons.getSelectionModel().selectFirst();
+            grid.add(lvPersons, 0, 0);
+            var buttonPane = new HBox();
+            grid.add(buttonPane, 0, 1, 2, 1);
+    
+            var newPersonButton = new Button();
+            newPersonButton.setText("New Person");
+            newPersonButton.setOnAction(new EventHandler<ActionEvent>() {
+    
+                @Override
+                public void handle(ActionEvent event) {
+                   Person p= personAdded();
+                   lvPersons.getItems().add(p);
+    
+                }
+    
+            });
+            buttonPane.getChildren().add(newPersonButton);
+    
+            var newStudentButton = new Button();
+            newStudentButton.setText("New Student");
+            newStudentButton.setOnAction(new EventHandler<ActionEvent>() {
+    
+                @Override
+                public void handle(ActionEvent event) {
+                    Person p=studentAdded();
+                    lvPersons.getItems().add(p);
+    
+                }
+    
+            });
+            buttonPane.getChildren().add(newStudentButton);
+    
+            var deleteCurrentButton = new Button();
+            deleteCurrentButton.setText("Delete");
+            deleteCurrentButton.setOnAction(new EventHandler<ActionEvent>() {
+    
+                @Override
+                public void handle(ActionEvent event) {
+                    App.this.deleteCurrent();
+                    lvPersons.getItems().remove(currPerson);
+                    currPerson=lvPersons.getItems().get(0);
+    
+                }
+    
+            });
+            buttonPane.getChildren().add(deleteCurrentButton);
+    
+            var scene = new Scene(grid, 800, 600);
+            stage.setScene(scene);
+    
+            var lbl = new Label("First Name");
+            firstNameField = new TextField();
+            firstNameField.textProperty().addListener((obs, oldText, newText) -> {
+                currPerson.setFirstName(newText);
+            });
+           
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(firstNameField);
+    
+            lbl = new Label("Last Name");
+            lastNameField = new TextField();
+            lastNameField.textProperty().addListener((obs, oldText, newText) -> {
+                currPerson.setLastName(newText);
+            });
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(lastNameField);
+    
+    
+            lbl = new Label("Street");
+            streetField = new TextField();
+            streetField.textProperty().addListener((obs, oldText, newText) -> {
+                currPerson.getAddress().setStreet(newText);
+            });
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(streetField);
+    
+    
+    
+            lbl = new Label("House Nr");
+            housenrField = new TextField();
+            housenrField.textProperty().addListener((obs, oldText, newText) -> {
+                currPerson.getAddress().setHouseNr(newText);
+            });
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(housenrField);
+    
+    
+            lbl = new Label("Postcode");
+            postCodeField = new TextField();
+            postCodeField.textProperty().addListener((obs, oldText, newText) -> {
+                currPerson.getAddress().setPostCode(newText);
+            });
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(postCodeField);
+    
+            lbl = new Label("Birthday");
+            bDayPicker = new DatePicker();
+            bDayPicker.valueProperty().addListener((obs, oldText, newText) -> {
+                currPerson.setBirthDate(newText);
+            });
+            editorPane.getChildren().add(lbl);
+            editorPane.getChildren().add(bDayPicker);
+    
+            studentBox=new VBox();
+            lbl=new Label("Matrikelnr");
+            matrikelNrField=new TextField();
+            matrikelNrField.textProperty().addListener((obs, oldText, newText) -> {
+                Student s=(Student)currPerson;
+                int matrNr;
+                try{
+                    matrNr=Integer.parseInt(newText);
+                }
+                catch(Exception ex){
+                    matrNr=0;
+                }
+                s.setMatrNumber(matrNr);
+            });
+            studentBox.getChildren().add(lbl);
+            studentBox.getChildren().add(matrikelNrField);
+            studentBox.setVisible(false);
+            editorPane.getChildren().add(studentBox);
+    
+    
+        }
+
+        public void setItems(ObservableList<Person> list) {
+            lvPersons.setItems(list);
+        }
+    }
+   
     private Person currPerson;
     private EntityManagerFactory emf;
     private EntityManager em;
     private EntityTransaction transaction;
-    private TextField firstNameField, lastNameField, streetField, postCodeField, housenrField,matrikelNrField;
-    private DatePicker bDayPicker;
-    private VBox studentBox;
+    private GUIStuff guiStuff;
+    private Person personAdded() {
+        Person p=new Person();
+        p.setFirstName("New");
+        p.setLastName("Person");
+        em.persist(p);
+        return p;
+    }
     @Override
     public void start(Stage stage) {
         emf = Persistence.createEntityManagerFactory("test-unit");
         em = emf.createEntityManager();
         transaction=em.getTransaction();
       
-        initBasicStructure(stage);
+        guiStuff=new GUIStuff();
+        guiStuff.initBasicStructure(stage);
         stage.show();
     }
-
-    void initBasicStructure(Stage stage) {
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-            @Override
-            public void handle(WindowEvent event) {
-                transaction.commit();
-                em.close();
-
-            }
-
-        });
-        var grid = new GridPane();
-        lvPersons = new ListView<Person>();
-        lvPersons.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Person>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Person> observable,
-            Person oldValue, Person newValue) {
-                if(firstNameField==null)return;
-                currPerson = newValue;
-                if(transaction.isActive())
-                transaction.commit();
-                transaction.begin();
-                currPersonChanged();
-               //throw new Error("test");
-                
-
-            }
-
-        });
-
-        grid.add(editorPane, 1, 0);
-        loadData();
-        lvPersons.getSelectionModel().selectFirst();
-        grid.add(lvPersons, 0, 0);
-        var buttonPane = new HBox();
-        grid.add(buttonPane, 0, 1, 2, 1);
-
-        var newPersonButton = new Button();
-        newPersonButton.setText("New Person");
-        newPersonButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                personAdded();
-
-            }
-
-        });
-        buttonPane.getChildren().add(newPersonButton);
-
-        var newStudentButton = new Button();
-        newStudentButton.setText("New Student");
-        newStudentButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                studentAdded();
-
-            }
-
-        });
-        buttonPane.getChildren().add(newStudentButton);
-
-        var deleteCurrentButton = new Button();
-        deleteCurrentButton.setText("Delete");
-        deleteCurrentButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                deleteCurrent();
-
-            }
-
-        });
-        buttonPane.getChildren().add(deleteCurrentButton);
-
-        var scene = new Scene(grid, 800, 600);
-        stage.setScene(scene);
-
-        var lbl = new Label("First Name");
-        firstNameField = new TextField();
-        firstNameField.textProperty().addListener((obs, oldText, newText) -> {
-            currPerson.setFirstName(newText);
-        });
-       
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(firstNameField);
-
-        lbl = new Label("Last Name");
-        lastNameField = new TextField();
-        lastNameField.textProperty().addListener((obs, oldText, newText) -> {
-            currPerson.setLastName(newText);
-        });
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(lastNameField);
-
-
-        lbl = new Label("Street");
-        streetField = new TextField();
-        streetField.textProperty().addListener((obs, oldText, newText) -> {
-            currPerson.getAddress().setStreet(newText);
-        });
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(streetField);
-
-
-
-        lbl = new Label("House Nr");
-        housenrField = new TextField();
-        housenrField.textProperty().addListener((obs, oldText, newText) -> {
-            currPerson.getAddress().setHouseNr(newText);
-        });
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(housenrField);
-
-
-        lbl = new Label("Postcode");
-        postCodeField = new TextField();
-        postCodeField.textProperty().addListener((obs, oldText, newText) -> {
-            currPerson.getAddress().setPostCode(newText);
-        });
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(postCodeField);
-
-        lbl = new Label("Birthday");
-        bDayPicker = new DatePicker();
-        bDayPicker.valueProperty().addListener((obs, oldText, newText) -> {
-            currPerson.setBirthDate(newText);
-        });
-        editorPane.getChildren().add(lbl);
-        editorPane.getChildren().add(bDayPicker);
-
-        studentBox=new VBox();
-        lbl=new Label("Matrikelnr");
-        matrikelNrField=new TextField();
-        matrikelNrField.textProperty().addListener((obs, oldText, newText) -> {
-            Student s=(Student)currPerson;
-            int matrNr;
-            try{
-                matrNr=Integer.parseInt(newText);
-            }
-            catch(Exception ex){
-                matrNr=0;
-            }
-            s.setMatrNumber(matrNr);
-        });
-        studentBox.getChildren().add(lbl);
-        studentBox.getChildren().add(matrikelNrField);
-        studentBox.setVisible(false);
-        editorPane.getChildren().add(studentBox);
-
-
-    }
-
-    private void personAdded() {
-        Person p=new Person();
-        p.setFirstName("New");
-        p.setLastName("Person");
-        em.persist(p);
-        lvPersons.getItems().add(p);
-    }
-
-    private void studentAdded() {
-        Student p=new Student();
-        p.setFirstName("New");
-        p.setLastName("Student");
-        em.persist(p);
-        lvPersons.getItems().add(p);
+   
+    private Student studentAdded() {
+        Student s=new Student();
+        s.setFirstName("New");
+        s.setLastName("Student");
+        em.persist(s);
+       return s;
     }
 
     private void deleteCurrent() {
         em.remove(currPerson);
-        lvPersons.getItems().remove(currPerson);
-        currPerson=lvPersons.getItems().get(0);
     }
 
     private void currPersonChanged() {
-        firstNameField.setText(currPerson.getFirstName());
-        lastNameField.setText(currPerson.getLastName());
-        streetField.setText(currPerson.getAddress().getStreet());
-        housenrField.setText(currPerson.getAddress().getHouseNr());
-        postCodeField.setText(currPerson.getAddress().getPostCode());
-        bDayPicker.setValue(currPerson.getBirthDate());
-        if(currPerson instanceof Student ){
-            Student s=(Student)currPerson;
-            matrikelNrField.setText(s.getMatrNumber()+"");
-            studentBox.setVisible(true);
-        }
-        else{
-            studentBox.setVisible(false);
-        }
+        if(transaction.isActive())
+            transaction.commit();
+        transaction.begin();
+    }
+    public void exit(){
+        if(transaction.isActive())
+            transaction.commit();
+        em.close();
     }
 
     private void loadData() {
         var query = em.createQuery("SELECT p FROM Person p", Person.class);
         var list = FXCollections.observableArrayList(query.getResultList());
 
-        lvPersons.setItems(list);
+        guiStuff.setItems(list);
     }
 
     public static void main(String[] args) {
         launch(args);
-        // EntityManagerFactory emf=Persistence.createEntityManagerFactory("test-unit");
 
     }
 }
