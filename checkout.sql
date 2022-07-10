@@ -103,6 +103,24 @@ CREATE SEQUENCE public.person_seq
 ALTER TABLE public.person_seq OWNER TO postgres;
 
 --
+-- Name: student; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.student (
+    id integer NOT NULL,
+    housenr character varying(255),
+    postcode character varying(255),
+    street character varying(255),
+    birthdate date,
+    firstname character varying(255),
+    lastname character varying(255),
+    matrnumber integer NOT NULL
+);
+
+
+ALTER TABLE public.student OWNER TO postgres;
+
+--
 -- Data for Name: address; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -117,6 +135,16 @@ COPY public.address (id, housenr, postcode, street) FROM stdin;
 --
 
 COPY public.person (id, housenr, postcode, street, birthdate, firstname, lastname) FROM stdin;
+1	9	49824	Hauptweg	2022-07-10	Gerda	Musterfrau
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.student (id, housenr, postcode, street, birthdate, firstname, lastname, matrnumber) FROM stdin;
+2	6	49080	Jahnplatz	1997-12-03	Timo	Schoemaker	978621
 \.
 
 
@@ -148,6 +176,14 @@ ALTER TABLE ONLY public.address
 
 ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (id);
 
 
 --
