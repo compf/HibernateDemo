@@ -16,15 +16,29 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE ONLY public.student DROP CONSTRAINT fk3bkmp4kohbl54m14tb2fcqya3;
-ALTER TABLE ONLY public.student DROP CONSTRAINT student_pkey;
-ALTER TABLE ONLY public.person DROP CONSTRAINT person_pkey;
-ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey;
-DROP TABLE public.student;
-DROP SEQUENCE public.person_seq;
-DROP TABLE public.person;
-DROP SEQUENCE public.address_seq;
-DROP TABLE public.address;
+DROP DATABASE demodb;
+--
+-- Name: demodb; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE demodb WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'German_Germany.1252';
+
+
+ALTER DATABASE demodb OWNER TO postgres;
+
+\connect demodb
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
