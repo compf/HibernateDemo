@@ -63,7 +63,6 @@ ALTER TABLE public.person_seq OWNER TO postgres;
 COPY public.person (dtype, id, housenr, postcode, street, birthdate, firstname, lastname, matrnumber) FROM stdin;
 Person	1	9	49824	Hauptweg	2022-07-10	Gerda	Musterfrau	\N
 Student	2	6	49080	Jahnplatz	1997-12-03	Timo	Schoemaker	978621
-person	3	8	5436	jjhj	2000-09-06	hallo	welt	\N
 \.
 
 
