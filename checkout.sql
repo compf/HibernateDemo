@@ -61,15 +61,13 @@ ALTER TABLE public.address_seq OWNER TO postgres;
 --
 
 CREATE TABLE public.person (
-    dtype character varying(31) NOT NULL,
     id integer NOT NULL,
     housenr character varying(255),
     postcode character varying(255),
     street character varying(255),
     birthdate date,
     firstname character varying(255),
-    lastname character varying(255),
-    matrnumber integer
+    lastname character varying(255)
 );
 
 
@@ -121,9 +119,8 @@ COPY public.address (id, housenr, postcode, street) FROM stdin;
 -- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.person (dtype, id, housenr, postcode, street, birthdate, firstname, lastname, matrnumber) FROM stdin;
-Person	1	9	49824	Hauptweg	2022-07-10	Gerda	Musterfrau	\N
-Student	2	6	49080	Jahnplatz	1997-12-03	Timo	Schoemaker	978621
+COPY public.person (id, housenr, postcode, street, birthdate, firstname, lastname) FROM stdin;
+1	9	49824	Hauptweg	2022-07-10	Gerda	Musterfrau
 \.
 
 
