@@ -4,12 +4,13 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
-@Embeddable
+@Entity
 public class Address {
 
     private String street, postCode, houseNr;
-
+    @Id
+    @GeneratedValue
+    private int id;
     public Address(String street, String postCode, String houseNr) {
         this.street = street;
         this.postCode = postCode;

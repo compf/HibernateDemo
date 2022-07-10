@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Calendar;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ public class Person {
     private int id;
     private String firstName;
     private String lastName;
-    @Embedded
+    @OneToOne(cascade=CascadeType.ALL)
     private Address address;
     private LocalDate birthDate;
 

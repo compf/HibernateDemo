@@ -3,6 +3,7 @@
         <class>HibernateDemo.model.Person</class>
         <class>HibernateDemo.model.Address</class>
         <class>HibernateDemo.model.Student</class>
+        <class>HibernateDemo.model.Address</class>
 
         <properties>
         
