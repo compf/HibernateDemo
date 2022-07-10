@@ -8,7 +8,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF16';
+SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
@@ -17,8 +17,10 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 ALTER TABLE ONLY public.person DROP CONSTRAINT fk6i7nduc8blbwp1dbfwavvnvvx;
+ALTER TABLE ONLY public.student DROP CONSTRAINT student_pkey;
 ALTER TABLE ONLY public.person DROP CONSTRAINT person_pkey;
 ALTER TABLE ONLY public.address DROP CONSTRAINT address_pkey;
+DROP TABLE public.student;
 DROP SEQUENCE public.person_seq;
 DROP TABLE public.person;
 DROP SEQUENCE public.address_seq;
@@ -87,6 +89,18 @@ CREATE SEQUENCE public.person_seq
 ALTER TABLE public.person_seq OWNER TO postgres;
 
 --
+-- Name: student; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.student (
+    matrnumber integer NOT NULL,
+    id integer NOT NULL
+);
+
+
+ALTER TABLE public.student OWNER TO postgres;
+
+--
 -- Data for Name: address; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -103,6 +117,15 @@ COPY public.address (id, housenr, postcode, street) FROM stdin;
 COPY public.person (dtype, id, birthdate, firstname, lastname, matrnumber, address_id) FROM stdin;
 Person	1	2022-07-10	Gerda	Musterfrau	\N	1
 Student	2	1997-12-03	Timo	Schoemaker	978621	2
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.student (matrnumber, id) FROM stdin;
+978621	2
 \.
 
 
@@ -134,6 +157,14 @@ ALTER TABLE ONLY public.address
 
 ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (id);
 
 
 --
