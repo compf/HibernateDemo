@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+/**
+ * Represent a simple address with street, house nr and post code
+ */
+//Provides that the address class can be embedded into another class and therefore another table
 @Embeddable
 public class Address {
 

@@ -5,6 +5,10 @@ import java.util.Calendar;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+
+/**
+ * Represent a student which is also a person has an additional matrikel nr
+ */
 @Entity
 public class Student extends Person {
 

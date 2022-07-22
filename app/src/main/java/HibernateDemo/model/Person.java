@@ -4,22 +4,33 @@ import java.time.LocalDate;
 import java.util.Calendar;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-
+/**
+ * Represent a simple Person
+ */
+// Declares that this class is an entity and can be saved to the database
 @Entity
+/*
+ * Specifies that inheritance should be resolved by creating a table for each concrete class
+ * Each table has all attributes of the class and all of its base classes
+ */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person {
-
+    //provides that the field "id" is an ID for the database
     @Id
+    // provides that the id value is generated automatically when creating an object
     @GeneratedValue
     private int id;
     private String firstName;
     private String lastName;
+
+    // The address object is embedded into the person/student class
+    // so that it hasn't it a table in the database
     @Embedded
     private Address address;
     private LocalDate birthDate;
