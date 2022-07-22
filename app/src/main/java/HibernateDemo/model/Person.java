@@ -10,16 +10,26 @@ import jakarta.persistence.GeneratedValue;
 
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-
+/**
+ * A class that represent a simple person
+ */
 @Entity
+/* provides that inheritance should be resolved
+ * by creating a table for each class, each table contains the row of the respective class
+ * and a foreign key to an entry in a base class table where the attrivutes of the base class are stored
+ */
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Person {
-
+    //provides that the field "id" is an ID for the database
     @Id
+    // provides that the id value is generated automatically when creating an object
     @GeneratedValue
     private int id;
     private String firstName;
     private String lastName;
+
+    // The address object is embedded into the person/student class
+    // so that it hasn't it a table in the database
     @Embedded
     private Address address;
     private LocalDate birthDate;

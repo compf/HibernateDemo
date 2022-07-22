@@ -39,7 +39,9 @@ import javafx.stage.WindowEvent;
 
 public class App extends Application {
    
-
+    /**
+     * Class only for the GUI, that doesn't relate to the topic "object relational mapping"
+     */
     public class GUIStuff{
         private ListView<Person> lvPersons;
         private VBox editorPane = new VBox();
@@ -222,11 +224,32 @@ public class App extends Application {
         }
     }
    
+    /**
+     * The current selected person
+     */
     private Person currPerson;
+
+    /**
+     *Used to create an EntityManager
+     */
     private EntityManagerFactory emf;
+    /**
+     * The Entity manager is used to connect to the database
+     * and provides an abstraction that allows object
+     * to be stored and loaded in the database without knowing
+     * the technology behind
+     */
     private EntityManager em;
+
+    /**
+     * Used to create a transaction so that the database state remains consistent
+     */
     private EntityTransaction transaction;
     private GUIStuff guiStuff;
+    /**
+     * Creates a person with a default name that is stored in the database
+     * The user can then change the properties
+     */
     private Person personAdded() {
         Person p=new Person();
         p.setFirstName("New");
@@ -234,17 +257,10 @@ public class App extends Application {
         em.persist(p);
         return p;
     }
-    @Override
-    public void start(Stage stage) {
-        emf = Persistence.createEntityManagerFactory("test-unit");
-        em = emf.createEntityManager();
-        transaction=em.getTransaction();
-      
-        guiStuff=new GUIStuff();
-        guiStuff.initBasicStructure(stage);
-        stage.show();
-    }
-   
+      /**
+     * Creates a student with a default name that is stored in the database
+     * The user can then change the properties
+     */
     private Student studentAdded() {
         Student s=new Student();
         s.setFirstName("New");
@@ -252,26 +268,63 @@ public class App extends Application {
         em.persist(s);
        return s;
     }
-
+    @Override
+    public void start(Stage stage) {
+        // create the entity manager factory by providing the name of the persistence unit
+        emf = Persistence.createEntityManagerFactory("test-unit");
+        //create the entity manager using the factory
+        em = emf.createEntityManager();
+        // create a transaction so that the database can be safely used
+        transaction=em.getTransaction();
+        
+        //GUI stuff########################
+        guiStuff=new GUIStuff();
+        guiStuff.initBasicStructure(stage);
+        stage.show();
+        //##########################################################
+    }
+   
+    
+    /**
+     * Deletes the current person from the database by using the remove() method
+     */
     private void deleteCurrent() {
         em.remove(currPerson);
     }
 
+    /**
+     * Called when the user switch to another person
+     */
     private void currPersonChanged() {
-        if(transaction.isActive())
+        // This if condition should only be false during initialization
+        if(transaction.isActive()){
+            // save the changes and make them persistent in the database
             transaction.commit();
+        }
+        // starts another transaction so that other edits can be made
         transaction.begin();
     }
+    /**
+     * Called when the program exits
+     */
     public void exit(){
-        if(transaction.isActive())
+        if(transaction.isActive()){
+            // save the last changes
             transaction.commit();
+        }
+        // close the entity manager and connection
         em.close();
     }
-
+    /**
+     * Load the data from the database
+     */
     private void loadData() {
+        // loads all person from the database
+        // This uses the JPQL syntax that is similar to SQL but resembles some oop languages
         var query = em.createQuery("SELECT p FROM Person p", Person.class);
+        
+        // convert the result to an observable array so that changes can be detected
         var list = FXCollections.observableArrayList(query.getResultList());
-
         guiStuff.setItems(list);
     }
 
