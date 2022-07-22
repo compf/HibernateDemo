@@ -11,7 +11,13 @@ import jakarta.persistence.GeneratedValue;
 /**
  * Represent a simple Person
  */
-// Declares that this class is an entity and can be saved to the database
+/* Declares that this class is an entity and can be saved to the database
+ * In this case (which is also the default) inheritance is resolved
+ * by creating one table for the base class which contains the union of all attributes 
+ * of all its derived classes,
+ * unused attributes are assigned a NULL value which means that the NOT-NULL constraint is 
+ * often restricted 
+*/
 @Entity
 public class Person {
     //provides that the field "id" is an ID for the database
