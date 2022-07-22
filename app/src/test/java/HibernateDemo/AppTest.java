@@ -19,9 +19,15 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
-
+/*
+ * This class provides some unit tests and show how to save and load data
+ * When the respective test is started (gradle test), the database is reset
+ * which is useful for switching to another pattern
+ */
 class AppTest {
-   
+   /**
+    * saves two person (base person and student) in the databse
+    */
     @Test
     void hibernateWorking() {
         Address address1 = new Address("Hauptweg", "49824", "9");
@@ -50,7 +56,9 @@ class AppTest {
 
 
     }
-
+    /**
+     * Count the number of person in the database
+     */
     private void testHibernateCount(EntityManagerFactory emf) {
         EntityManager em=null;
         try {
@@ -67,14 +75,22 @@ class AppTest {
             em.close();
         }
     }
-    
+    /**
+     * Queries for a specific person/student
+     * @param emf The entity manager factory 
+     * @param qId The id of the person to search for
+     * @param personType the class type of the person to search for
+     */
     private void testHibernateSelect(EntityManagerFactory emf,int qId,Class<?> personType) {
         EntityManager em=null;
         try {
 
             em = emf.createEntityManager();
+            // create a typed query to get the matching person
+            // to avoid SQL injection, parameters are used
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p where p.id=:qId ",Person.class).
             setParameter("qId", qId);
+            // expecting here only one result
             Person p = query.getSingleResult();
             assertEquals(p.getClass(),personType);
         } catch (Exception ex) {
